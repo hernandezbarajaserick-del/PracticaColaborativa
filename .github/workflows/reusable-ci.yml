@@ -6,7 +6,7 @@ on:
       node-versions:
         required: false
         type: string
-        default: '["20", "22"]'
+        default: '["18", "20", "22"]'
       run-lint:
         required: false
         type: boolean
@@ -29,10 +29,13 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Simular pruebas
-        run: |
-          echo "Simulando ejecución de pruebas en Node.js v${{ matrix.node }}..."
-          echo "Pruebas pasadas exitosamente."
+      - name: Configurar Node.js v${{ matrix.node }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      - name: Simular pruebas unitarias
+        run: echo "Pruebas simuladas correctamente en Node.js ${{ matrix.node }}"
 
   build:
     name: Build & Package
@@ -44,10 +47,15 @@ jobs:
       - name: Checkout del código
         uses: actions/checkout@v4
 
-      - name: Crear carpeta dist simulada
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Simular compilación
         run: |
           mkdir -p dist
-          echo "<h1>App Compilada</h1>" > dist/index.html
+          echo "Build simulado" > dist/index.html
 
       - name: Guardar Artifact de producción
         uses: actions/upload-artifact@v4
