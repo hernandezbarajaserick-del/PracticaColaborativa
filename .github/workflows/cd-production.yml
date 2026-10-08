@@ -48,10 +48,15 @@ jobs:
           path: dist/
 
       - name: Autenticación OIDC con AWS
+        if: ${{ vars.AWS_STAGING_ROLE_ARN != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsStagingRole
+          role-to-assume: ${{ vars.AWS_STAGING_ROLE_ARN }}
           aws-region: us-east-1
+
+      - name: Omitir autenticación AWS (sin configuración)
+        if: ${{ vars.AWS_STAGING_ROLE_ARN == '' }}
+        run: echo "AWS_STAGING_ROLE_ARN no está configurado; se omite autenticación OIDC en staging."
 
       - name: Desplegar en Staging
         run: |
@@ -75,10 +80,15 @@ jobs:
           path: dist/
 
       - name: Autenticación OIDC con AWS
+        if: ${{ vars.AWS_PRODUCTION_ROLE_ARN != '' }}
         uses: aws-actions/configure-aws-credentials@v4
         with:
-          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsProductionRole
+          role-to-assume: ${{ vars.AWS_PRODUCTION_ROLE_ARN }}
           aws-region: us-east-1
+
+      - name: Omitir autenticación AWS (sin configuración)
+        if: ${{ vars.AWS_PRODUCTION_ROLE_ARN == '' }}
+        run: echo "AWS_PRODUCTION_ROLE_ARN no está configurado; se omite autenticación OIDC en producción."
 
       - name: Despliegue en Producción
         run: |
