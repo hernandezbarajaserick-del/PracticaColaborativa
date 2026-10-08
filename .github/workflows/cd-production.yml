@@ -14,12 +14,10 @@ on:
           - staging
           - production
 
-# Evita ejecuciones simultáneas del mismo grupo
 concurrency:
   group: deployment-${{ github.ref }}
   cancel-in-progress: false
 
-# Permisos mínimos requeridos para OIDC
 permissions:
   id-token: write
   contents: read
@@ -47,16 +45,8 @@ jobs:
           name: build-artifact
           path: dist/
 
-      - name: Autenticación OIDC con AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsStagingRole
-          aws-region: us-east-1
-
       - name: Desplegar en Staging
-        run: |
-          echo "Desplegando en Staging..."
-          # aws s3 sync dist/ s3://staging-app-bucket/
+        run: echo "Desplegando simulado en Staging..."
 
   deploy-production:
     name: Deploy to Production
@@ -74,12 +64,5 @@ jobs:
           name: build-artifact
           path: dist/
 
-      - name: Autenticación OIDC con AWS
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: arn:aws:iam::123456789012:role/GitHubActionsProductionRole
-          aws-region: us-east-1
-
       - name: Despliegue en Producción
-        run: |
-          echo "Ejecutando despliegue Zero-Downtime en Producción..."
+        run: echo "Ejecutando despliegue simulado en Producción..."
